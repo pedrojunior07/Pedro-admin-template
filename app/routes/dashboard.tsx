@@ -8,9 +8,8 @@ import { GlobalErrorBoundary } from "~/components/GlobalErrorBoundary";
 import DeleteIcon from "~/components/icons/Delete";
 import EditIcon from "~/components/icons/Edit";
 import ViewIcon from "~/components/icons/View";
-import StatusBadge from "../components/StatusBadge";
-import MobileTable from "../components/MobileTable";
-import { formatCurrency } from "./formatCurrency";
+import StatusBadge from "~/components/StatusBadge";
+import MobileTable from "~/components/MobileTable";
 import { formatDate } from "~/utils/formatDate";
 import { getSupabaseClient } from "~/utils/getSupabaseClient";
 
@@ -218,6 +217,15 @@ export default function Dashboard() {
     return roles[role] || role;
   };
 
+  // Função simples para formatar valores em MZN
+  const formatMZN = (value: number) => {
+    return new Intl.NumberFormat('pt-MZ', {
+      style: 'currency',
+      currency: 'MZN',
+      minimumFractionDigits: 2
+    }).format(value);
+  };
+
   return (
     <div className="space-y-6 p-4 md:p-6">
       {/* Cabeçalho */}
@@ -242,7 +250,7 @@ export default function Dashboard() {
         />
         <StatCard 
           title="Receita Hoje" 
-          value={formatCurrency(estatisticas.totalReceitaHoje, 'MZN')} 
+          value={formatMZN(estatisticas.totalReceitaHoje)} 
           icon="💰"
           trend="up"
           trendValue="12%"
@@ -275,7 +283,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex-1">
                   <h3 className="font-medium">{produto.nome}</h3>
-                  <p className="text-sm text-gray-600">{formatCurrency(produto.preco, 'MZN')}</p>
+                  <p className="text-sm text-gray-600">{formatMZN(produto.preco)}</p>
                 </div>
                 <StatusBadge status={produto.status} />
               </div>
@@ -300,7 +308,7 @@ export default function Dashboard() {
               <div className="py-3 border-b">
                 <div className="flex justify-between">
                   <span className="font-medium">{venda.cliente_nome || "Cliente não especificado"}</span>
-                  <span className="text-blue-600">{formatCurrency(venda.valor_total, 'MZN')}</span>
+                  <span className="text-blue-600">{formatMZN(venda.valor_total)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-gray-600 mt-1">
                   <span>{formatDate(venda.data_venda)}</span>
@@ -345,7 +353,7 @@ export default function Dashboard() {
                       </span>
                     </td>
                     <td className="p-3 whitespace-nowrap font-medium text-blue-600">
-                      {formatCurrency(venda.valor_total, 'MZN')}
+                      {formatMZN(venda.valor_total)}
                     </td>
                     <td className="p-3 whitespace-nowrap text-right">
                       <Link
@@ -382,7 +390,7 @@ export default function Dashboard() {
                 <div className="py-3 border-b">
                   <div className="flex justify-between">
                     <span className="font-medium">{produto.nome}</span>
-                    <span className="text-blue-600">{formatCurrency(produto.preco, 'MZN')}</span>
+                    <span className="text-blue-600">{formatMZN(produto.preco)}</span>
                   </div>
                   <div className="flex justify-between text-sm text-gray-600 mt-1">
                     <span>Qtd: {produto.quantidade}</span>
@@ -441,7 +449,7 @@ export default function Dashboard() {
                         <div className="text-xs text-gray-500">{produto.fabricante}</div>
                       </td>
                       <td className="p-3 whitespace-nowrap font-medium">
-                        {formatCurrency(produto.preco, 'MZN')}
+                        {formatMZN(produto.preco)}
                       </td>
                       <td className="p-3 whitespace-nowrap">
                         <span className={`px-2 py-1 text-xs rounded-full ${
